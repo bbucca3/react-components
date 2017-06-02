@@ -1,28 +1,54 @@
-var TodoList = (props) => {
 
-  // This function will be called when the first `<li>` below is clicked on
-  // Notice that event handling functions receive an `event` object
-  // We want to define it where it has access to `props`
+// A class component can be defined as an ES6 class
+// that extends the base Component class included in the React library
+class GroceryListItem extends React.Component {
 
-  var onListItemClick = (event) => {
-    console.log('I got clicked');
-  };
+  // A `constructor` method is expected on all ES6 classes
+  // When React instantiates the component,
+  // it will pass `props` to the constructor
+  constructor(props) {
+    // Equivalent to ES5's React.Component.call(this, props)
+    super(props);
+    // `state` is just an object literal
+    this.state = {
+      done: false
+    };
+  }
 
-  // Because we used curly braces with this arrow function
-  // we have to write an explicit `return` statement
-  return (
-    <ul>
-      <li onClick={onListItemClick}>{props.todos[0]}</li>
-      <li>{props.todos[1]}</li>
-      <li>{props.todos[2]}</li>
-    </ul>
-  );
+  onListItemClick() {
+    this.setState({
+      done: !this.state.done
+    });
+  }
+
+  render() {
+
+    var style = {
+      fontWeight: this.state.done ? 'bold' : 'normal'
+    };
+
+    return (
+      <li style={style} onMouseEnter={this.onListItemClick.bind(this)}>{this.props.todo}</li>
+    );
+
+  }
+
 }
+
+// Update our `TodoList` to use the new `TodoListItem` component
+// This can still be a stateless function component!
+var GroceryList = (props) => (
+  <ul>
+    {props.todos.map((todo, index) =>
+      <GroceryListItem key={index} todo={todo} />
+    )}
+  </ul>
+);
 
 var App = () => (
   <div>
-    <h2>My Todo List</h2>
-    <TodoList todos={['Learn React', 'Crush Recast.ly', 'Maybe sleep']}/>
+    <h2>My Grocery List</h2>
+    <GroceryList todos={['Learn React', 'Crush Recast.ly', 'Maybe sleep', 'ZZZZ']}/> 
   </div>
 );
 
